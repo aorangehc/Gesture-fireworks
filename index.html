@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>手指烟花 Gesture Fireworks</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      #app {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        touch-action: none;
+      }
+      /* 摄像头视频层 */
+      video#video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1); /* 镜像显示 */
+        display: block;
+        z-index: 1; /* 确保在最底层 */
+      }
+      canvas#effects {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: auto; /* 用于鼠标点击触发 */
+        z-index: 2; /* 在视频层之上 */
+      }
+      canvas#debug {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none; /* 调试层不拦截事件 */
+        z-index: 3; /* 在最顶层 */
+      }
+      .hint {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        color: #9aa4;
+        font: 12px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="effects"></canvas>
+      <canvas id="debug"></canvas>
+      <div class="hint">点击任意位置触发特效A（4秒） · 按 D 切换调试</div>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+  </html>

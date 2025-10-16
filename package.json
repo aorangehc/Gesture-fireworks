@@ -1,0 +1,41 @@
+{
+  "name": "gesture-fireworks",
+  "version": "1.0.0",
+  "description": "基于手势识别的实时烟花效果展示系统 - A real-time fireworks display system based on gesture recognition",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "gesture-recognition",
+    "fireworks",
+    "mediapipe",
+    "computer-vision",
+    "interactive",
+    "canvas",
+    "javascript",
+    "real-time"
+  ],
+  "author": "Gesture Fireworks Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/gesture-fireworks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/gesture-fireworks/issues"
+  },
+  "homepage": "https://github.com/your-username/gesture-fireworks#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
