@@ -16,13 +16,13 @@ export class AdvancedGestureRecognizer {
     
     // 动态置信度阈值
     this.dynamicThresholds = {
-      'FIST': 0.75,
-      'OK': 0.8,
-      'HEART': 0.65,
-      'THUMBS_UP': 0.7,
-      'PEACE': 0.75,
-      'POINTING': 0.7,
-      'OPEN_PALM': 0.6
+      'FIST': 0.85,
+      'OK': 0.85,
+      'HEART': 0.75,
+      'THUMBS_UP': 0.85,
+      'PEACE': 0.85,
+      'POINTING': 0.85,
+      'OPEN_PALM': 0.8
     };
     
     this.history = [];
@@ -37,10 +37,10 @@ export class AdvancedGestureRecognizer {
     this.historyLength = 10; // 历史记录长度
     
     // 稳定性检测参数
-    this.stabilityFrames = 5; // 需要连续多少帧才认为稳定
+    this.stabilityFrames = options.stabilityFrames || 6;
     
     // 冷却机制
-    this.cooldownTime = 500; // 冷却时间（毫秒）
+    this.cooldownTime = this.cooldownMs;
     this.lastTriggerTime = new Map(); // 记录每个手势的最后触发时间
     this.lastStableGesture = new Map(); // 记录每只手的最后稳定手势（用于上升沿检测）
   }
@@ -65,6 +65,13 @@ export class AdvancedGestureRecognizer {
     const bestGesture = gestures.reduce((best, current) => 
       current.confidence > best.confidence ? current : best
     );
+    const secondGesture = gestures
+      .filter(g => g.gesture !== bestGesture.gesture)
+      .reduce((best, current) => current.confidence > best.confidence ? current : best, { gesture: 'NONE', confidence: 0 });
+    const margin = 0.12;
+    if (bestGesture.confidence - secondGesture.confidence < margin) {
+      return { gesture: 'NONE', confidence: 0 };
+    }
 
     // 使用动态置信度阈值
     const threshold = this.dynamicThresholds[bestGesture.gesture] || this.confidenceThreshold;

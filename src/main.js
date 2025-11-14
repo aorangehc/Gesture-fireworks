@@ -31,11 +31,12 @@ const app = {
     // 摄像头与手势
     this.camera = new Camera(this.video, { mirror: true });
     this.gestureRecognizer = new AdvancedGestureRecognizer({ 
-      stableFrames: 5, 
-      cooldownMs: 300,
-      confidenceThreshold: 0.7,
-      smoothingFrames: 8,
-      holdToRepeat: false
+      stableFrames: 6, 
+      cooldownMs: 350,
+      confidenceThreshold: 0.8,
+      smoothingFrames: 10,
+      holdToRepeat: false,
+      stabilityFrames: 6
     });
     
     // 设置手势检测回调
@@ -74,25 +75,25 @@ const app = {
       // 根据不同手势触发不同特效
       switch (gesture) {
         case 'FIST':
-          this.triggerEffectBurst(pt.x, pt.y); // 拳头 -> 金色爆裂烟花
+          this.triggerEffectBurst(pt.x, pt.y, { particleCount: 140, duration: 4.0, colors: [[255, 220, 0],[255, 180, 50],[255, 240, 150]] });
           break;
         case 'OK':
-          this.triggerEffectCircle(pt.x, pt.y); // OK手势 -> 红橙色圆形烟花
+          this.triggerEffectCircle(pt.x, pt.y, { rings: 2, count: 140, colors: [ { r: 255, g: 80, b: 80 }, { r: 255, g: 140, b: 60 }, { r: 255, g: 200, b: 80 } ] });
           break;
         case 'HEART':
-          this.triggerEffectHeart(pt.x, pt.y); // 爱心 -> 粉色心形烟花
+          this.triggerEffectHeart(pt.x, pt.y, { particleCount: 90 });
           break;
         case 'THUMBS_UP':
-          this.triggerEffectStar(pt.x, pt.y); // 点赞 -> 星形烟花
+          this.triggerEffectStar(pt.x, pt.y, { particleCount: 70, colors: [[255,255,120],[255,230,80],[255,255,255]] });
           break;
         case 'PEACE':
-          this.triggerEffectSpiral(pt.x, pt.y); // 胜利手势 -> 紫色螺旋烟花
+          this.triggerEffectSpiral(pt.x, pt.y, { particleCount: 110, colors: [[160,120,255],[120,80,220],[200,160,255]] });
           break;
         case 'POINTING':
-          this.triggerEffectUmbrella(pt.x, pt.y); // 指向 -> 蓝色伞形烟花
+          this.triggerEffectUmbrella(pt.x, pt.y, { particleCount: 45, colors: [[40,140,255],[0,100,200],[80,180,255]] });
           break;
         case 'OPEN_PALM':
-          this.triggerEffectA(pt.x, pt.y); // 张开手掌 -> 基础烟花A
+          this.triggerEffectA(pt.x, pt.y);
           break;
         default:
           // 保持原有的ONE/TWO手势兼容性
@@ -132,7 +133,7 @@ const app = {
     } catch (e) {
       console.warn('摄像头开启失败:', e);
     }
-    this.hands = await createHandTracker(this.video, { maxHands: 2 });
+    this.hands = await createHandTracker(this.video, { maxHands: 2, modelComplexity: 1, minDetectionConfidence: 0.8, minTrackingConfidence: 0.7 });
   },
 
   _resize() {
@@ -160,29 +161,29 @@ const app = {
     });
   },
 
-  triggerEffectA(x, y) {
-    this.manager.spawn(new FireworkA(x, y, performance.now(), this.pool));
+  triggerEffectA(x, y, options = {}) {
+    this.manager.spawn(new FireworkA(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectB(x, y) {
-    this.manager.spawn(new FireworkB(x, y, performance.now(), this.pool));
+  triggerEffectB(x, y, options = {}) {
+    this.manager.spawn(new FireworkB(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectCircle(x, y) {
-    this.manager.spawn(new FireworkCircle(x, y, performance.now(), this.pool));
+  triggerEffectCircle(x, y, options = {}) {
+    this.manager.spawn(new FireworkCircle(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectUmbrella(x, y) {
-    this.manager.spawn(new FireworkUmbrella(x, y, performance.now(), this.pool));
+  triggerEffectUmbrella(x, y, options = {}) {
+    this.manager.spawn(new FireworkUmbrella(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectHeart(x, y) {
-    this.manager.spawn(new FireworkHeart(x, y, performance.now(), this.pool));
+  triggerEffectHeart(x, y, options = {}) {
+    this.manager.spawn(new FireworkHeart(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectStar(x, y) {
-    this.manager.spawn(new FireworkStar(x, y, performance.now(), this.pool));
+  triggerEffectStar(x, y, options = {}) {
+    this.manager.spawn(new FireworkStar(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectSpiral(x, y) {
-    this.manager.spawn(new FireworkSpiral(x, y, performance.now(), this.pool));
+  triggerEffectSpiral(x, y, options = {}) {
+    this.manager.spawn(new FireworkSpiral(x, y, performance.now(), this.pool, options));
   },
-  triggerEffectBurst(x, y) {
-    this.manager.spawn(new FireworkBurst(x, y, performance.now(), this.pool));
+  triggerEffectBurst(x, y, options = {}) {
+    this.manager.spawn(new FireworkBurst(x, y, performance.now(), this.pool, options));
   },
 
   _loop(now) {
