@@ -96,9 +96,6 @@ const app = {
           this.triggerEffectA(pt.x, pt.y);
           break;
         default:
-          // 保持原有的ONE/TWO手势兼容性
-          if (gesture === 'ONE') this.triggerEffectA(pt.x, pt.y);
-          else if (gesture === 'TWO') this.triggerEffectB(pt.x, pt.y);
           break;
       }
       
